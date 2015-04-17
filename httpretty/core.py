@@ -169,10 +169,12 @@ class HTTPrettyRequest(BaseHTTPRequestHandler, BaseClass):
         # Now 2 convenient attributes for the HTTPretty API:
 
         # `querystring` holds a dictionary with the parsed query string
+        print 'waaat', self.path
         try:
             self.path = self.path.encode('iso-8859-1')
         except UnicodeDecodeError:
             pass
+        print 'huh', self.path
 
         self.path = decode_utf8(self.path)
 
@@ -191,10 +193,16 @@ class HTTPrettyRequest(BaseHTTPRequestHandler, BaseClass):
         )
 
     def parse_querystring(self, qs):
+        print 'qs', qs, isinstance(qs, unicode), qs.encode('utf-8'), isinstance(qs.encode('utf-8'), unicode)
+        expanded = unquote_utf8(qs)
+        print 'xp', expanded
         parsed = parse_qs(qs)
+        print 'parse', parsed
         result = {}
         for k in parsed:
             result[k] = list(map(decode_utf8, parsed[k]))
+        print 'result', result
+        # print parsed['user'][0].decode('utf-8')
 
         return result
 
@@ -405,6 +413,7 @@ class fakesock(object):
 
             request = httpretty.historify_request(headers, body)
 
+            print 'yooo', s.query
             info = URIInfo(hostname=self._host, port=self._port,
                            path=s.path,
                            query=s.query,

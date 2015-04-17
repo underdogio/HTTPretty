@@ -679,8 +679,9 @@ def test_unicode_querystrings():
     ("Querystrings should accept unicode characters")
     HTTPretty.register_uri(HTTPretty.GET, "http://yipit.com/login",
                            body="Find the best daily deals")
-    requests.get('http://yipit.com/login?user=Gabriel+Falcão')
-    expect(HTTPretty.last_request.querystring['user'][0]).should.be.equal('Gabriel Falcão')
+    requests.get('http://yipit.com/login', params={'user': 'Gabriel +Falcão'})
+    print 'in test', HTTPretty.last_request.querystring['user'][0]
+    expect(HTTPretty.last_request.querystring['user'][0]).should.be.equal('Gabriel +Falcão')
 
 
 @use_tornado_server

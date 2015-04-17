@@ -61,12 +61,13 @@ try:  # pragma: no cover
     from urllib.parse import urlsplit, urlunsplit, parse_qs, quote, quote_plus, unquote
     unquote_utf8 = unquote
 except ImportError:  # pragma: no cover
-    from urlparse import urlsplit, urlunsplit, parse_qs, unquote
-    from urllib import quote, quote_plus
+    from urlparse import urlsplit, urlunsplit, parse_qs
+    from urllib import quote, quote_plus, unquote_plus
+    unquote = unquote_plus
     def unquote_utf8(qs):
         if isinstance(qs, text_type):
             qs = qs.encode('utf-8')
-        s = unquote(qs)
+        s = unquote_plus(qs)
         if isinstance(s, byte_type):
             return s.decode("utf-8")
         else:
