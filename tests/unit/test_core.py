@@ -73,6 +73,23 @@ def test_request_parse_querystring():
     request.querystring.should.equal({'name': ['Gabriel Falcão']})
 
 
+def test_request_parse_querystring_plus():
+    ("HTTPrettyRequest#parse_querystring should unescape encoded pluses properly")
+
+    # Given a request string containing a unicode encoded querystring
+
+    headers = "\r\n".join([
+        'POST /create?name=Gabriel%2BFalcão HTTP/1.1',
+        'Content-Type: multipart/form-data',
+    ])
+
+    # When I create a HTTPrettyRequest with an empty body
+    request = HTTPrettyRequest(headers, body='')
+
+    # Then it should have a parsed querystring
+    request.querystring.should.equal({'name': ['Gabriel+Falcão']})
+
+
 def test_request_parse_body_when_it_is_application_json():
     ("HTTPrettyRequest#parse_request_body recognizes the "
      "content-type `application/json` and parses it")
